@@ -1,0 +1,49 @@
+<form method="post">
+    {% csrf_token %}
+
+    {% if student %}
+        <input type="hidden" name="student_id" value="{{ student.id }}"/>
+    {% endif %}
+    <div>
+        <label for="{{ form.name.id_for_label }}">Name:</label>
+        {{ form.first_name }}
+        {{ form.first_name.errors }}
+    </div>
+
+    <div>
+        <label for="{{ form.email.id_for_label }}">lastname:</label>
+        {{ form.last_name }}
+        {{ form.last_name.errors }}
+    </div>
+
+    <button type="submit">
+        {% if student %} Save Changes {% else %} Add Student {% endif %}
+    </button>
+
+    {% if student%}
+    <a href="{% url 'student_list'%}">
+        cancel
+    </a>
+    {% endif %}
+</form>
+
+<div>
+    {% for student in students %}
+        <p>Member ID: {{ student.member_id }}</p>
+        <p>StudentName:
+            <span>{{ student.first_name }}</span>
+            <span>{{ student.last_name }}</span>
+        </p>
+      <div style="display: flex; gap: 2px; align-items: center;">
+            <a href=" {% url 'student_list' %}?edit={{ student_item.id }}">
+                edit
+            </a>
+            <form method="post" action="{% url 'student_delete' student.id %}">
+                {% csrf_token %}
+                <button type="submit">delete</button>
+            </form>
+      </div>
+    {% empty %}
+        <p>No students found.</p>
+    {% endfor%}
+</div>
